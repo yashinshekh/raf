@@ -95,16 +95,9 @@ if __name__ == '__main__':
     sheet_name = "compareandrecycle"
 
     alreadyscrapped = []
-
-    # uploadtospreadsheet()
-
-
     firefox_options = Options()
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
-
-    # driver = webdriver.Firefox()
-
 
     with open("compareandrecycle.csv","w",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)

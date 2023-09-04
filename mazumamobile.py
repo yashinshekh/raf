@@ -66,7 +66,7 @@ def uploadtospreadsheet():
 
     spreadsheet_id = spreadsheet_url.split('/')[-2]
 
-    with open("compareandrecycle.csv") as csv_file:
+    with open(sheet_name+".csv") as csv_file:
         csv_reader = csv.reader(csv_file)
         rows = list(csv_reader)
 
