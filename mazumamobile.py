@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     with open(sheet_name+".csv","a") as f:
         writer = csv.writer(f)
-        writer.writerow(['brand','title','storage','excellent','good','poor','faulty','dead','AUD -> HKD'])
+        writer.writerow(['brand','scrapped_time','title','storage','excellent','good','poor','faulty','dead','AUD -> HKD'])
 
     scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -178,8 +178,8 @@ if __name__ == '__main__':
 
                 with open(sheet_name+".csv","a") as f:
                     writer = csv.writer(f)
-                    writer.writerow(["https://www.mazumamobile.com.au"+link,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
-                    print(["https://www.mazumamobile.com.au"+link,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
+                    writer.writerow(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
+                    print(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
 
 
     uploadtospreadsheet()
