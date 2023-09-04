@@ -106,7 +106,7 @@ if __name__ == '__main__':
         writer = csv.writer(f)
         writer.writerow(['link','timestamp','brand','title','phone_name','storage','Like new','Very good','Good','In order','Inadequate','EUR -> AUD','EUR -> HKD'])
 
-    scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)")
 
     driver.get("https://wise.com/")
     driver.find_element(By.ID,'tw-calculator-source-select').click()
