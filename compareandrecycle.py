@@ -99,7 +99,7 @@ if __name__ == '__main__':
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
-    with open("compareandrecycle.csv","w",newline="",encoding="utf-8") as f:
+    with open("compareandrecycle.csv","a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['link','timestamp','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
                          'gbp_hkd_rate','gbp_aud_rate'])

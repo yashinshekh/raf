@@ -102,7 +102,7 @@ if __name__ == '__main__':
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
-    with open(sheet_name+".csv","w",newline="",encoding="utf-8") as f:
+    with open(sheet_name+".csv","a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['link','timestamp','brand','title','phone_name','storage','Like new','Very good','Good','In order','Inadequate','EUR -> AUD','EUR -> HKD'])
 
