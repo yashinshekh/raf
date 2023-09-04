@@ -94,108 +94,104 @@ if __name__ == '__main__':
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1KaBHOgUEwVfrUmoMvzsIoH6aIhZdNhlDXquF3lq7NGs/edit#gid=0"
     sheet_name = "compareandrecycle"
 
-    alreadyscrapped = []
-    firefox_options = Options()
-    firefox_options.headless = True
-    driver = webdriver.Firefox(options=firefox_options)
-
-    with open("compareandrecycle.csv","w",newline="",encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow(['link','timestamp','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
-                         'gbp_hkd_rate','gbp_aud_rate'])
-
-    scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-
-    driver.get("https://wise.com/")
-    driver.find_element(By.ID,'tw-calculator-source-select').click()
-    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    driver.get("https://wise.com/")
-    driver.find_element(By.ID,'tw-calculator-target-select').click()
-    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('HKD')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    gbp_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
-
-    print(gbp_hkd_rate)
-
-    driver.find_element(By.ID,'tw-calculator-source-select').click()
-    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    driver.get("https://wise.com/")
-    driver.find_element(By.ID,'tw-calculator-target-select').click()
-    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('AUD')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    gbp_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
-
-    print(gbp_aud_rate)
-
-
-    driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
-    time.sleep(3)
-
-    brands = Selector(text=a).xpath('.//*[@class="brand-box "]/img/@alt').extract()
-    print(brands)
-
-    for brand in brands:
-        driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
-        driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
-
-        ds = Selector(text=driver.page_source).xpath('.//*[@class="product-wrap"]').extract()
-        for d in ds:
-            sel1 = Selector(text=d)
-            l = sel1.xpath('.//a/@href').extract_first()
-            product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
-
-            for condition in ['new','working','working-poor','broken']:
-                for capacity in ['64gb','128gb','256gb','512gb']:
-                    if "https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
-
-                        if 'Sorry we couldn\'t find a price' in str(driver.page_source):
-                            with open("done.csv","a") as f:
-                                writer = csv.writer(f)
-                                writer.writerow(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity])
-                                print(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity])
-
-                        driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
-                        time.sleep(3)
-                        response = Selector(text=driver.page_source)
-                        datas = response.xpath('.//*[@id="comparison-table"]/div[@class="comparison-row "]').extract()[:3]
-                        temp = []
-                        for data in datas:
-                            sel = Selector(text=data)
-                            recycler = sel.xpath('.//*[@class="comparison-cell merchant"]/img/@alt').extract_first()
-                            try:
-                                price = ''.join(re.findall(r'\d|\.', ''.join(sel.xpath('.//*[@class="comparison-cell price sort"]//text()').extract())))
-                            except:
-                                price = ''
-
-                            temp.append(recycler)
-                            temp.append(price)
-
-                        cond = condition
-                        if condition == "working":
-                            cond = "good"
-                        elif condition == "working-poor":
-                            cond = "poor"
-
-
-                        if temp:
-                            with open("compareandrecycle.csv","a",newline="",encoding="utf-8") as f:
-                                writer = csv.writer(f)
-                                writer.writerow(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,scrapped_time,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
-                                print(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,scrapped_time,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
-
-                    else:
-                        print("Exists...")
-
-
-            # break
-        # break
+    # alreadyscrapped = []
+    # firefox_options = Options()
+    # firefox_options.headless = True
+    # driver = webdriver.Firefox(options=firefox_options)
+    #
+    # with open("compareandrecycle.csv","w",newline="",encoding="utf-8") as f:
+    #     writer = csv.writer(f)
+    #     writer.writerow(['link','timestamp','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
+    #                      'gbp_hkd_rate','gbp_aud_rate'])
+    #
+    # scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    #
+    # driver.get("https://wise.com/")
+    # driver.find_element(By.ID,'tw-calculator-source-select').click()
+    # driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
+    # ActionChains(driver).send_keys(Keys.ENTER).perform()
+    # time.sleep(1)
+    # driver.get("https://wise.com/")
+    # driver.find_element(By.ID,'tw-calculator-target-select').click()
+    # driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('HKD')
+    # ActionChains(driver).send_keys(Keys.ENTER).perform()
+    # time.sleep(1)
+    # gbp_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+    #
+    # print(gbp_hkd_rate)
+    #
+    # driver.find_element(By.ID,'tw-calculator-source-select').click()
+    # driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
+    # ActionChains(driver).send_keys(Keys.ENTER).perform()
+    # time.sleep(1)
+    # driver.get("https://wise.com/")
+    # driver.find_element(By.ID,'tw-calculator-target-select').click()
+    # driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('AUD')
+    # ActionChains(driver).send_keys(Keys.ENTER).perform()
+    # time.sleep(1)
+    # gbp_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+    #
+    # print(gbp_aud_rate)
+    #
+    #
+    # driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
+    # time.sleep(3)
+    #
+    # brands = Selector(text=a).xpath('.//*[@class="brand-box "]/img/@alt').extract()
+    # print(brands)
+    #
+    # for brand in brands:
+    #     driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
+    #     driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
+    #
+    #     ds = Selector(text=driver.page_source).xpath('.//*[@class="product-wrap"]').extract()
+    #     for d in ds:
+    #         sel1 = Selector(text=d)
+    #         l = sel1.xpath('.//a/@href').extract_first()
+    #         product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
+    #
+    #         for condition in ['new','working','working-poor','broken']:
+    #             for capacity in ['64gb','128gb','256gb','512gb']:
+    #                 if "https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
+    #
+    #                     if 'Sorry we couldn\'t find a price' in str(driver.page_source):
+    #                         with open("done.csv","a") as f:
+    #                             writer = csv.writer(f)
+    #                             writer.writerow(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity])
+    #                             print(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity])
+    #
+    #                     driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
+    #                     time.sleep(3)
+    #                     response = Selector(text=driver.page_source)
+    #                     datas = response.xpath('.//*[@id="comparison-table"]/div[@class="comparison-row "]').extract()[:3]
+    #                     temp = []
+    #                     for data in datas:
+    #                         sel = Selector(text=data)
+    #                         recycler = sel.xpath('.//*[@class="comparison-cell merchant"]/img/@alt').extract_first()
+    #                         try:
+    #                             price = ''.join(re.findall(r'\d|\.', ''.join(sel.xpath('.//*[@class="comparison-cell price sort"]//text()').extract())))
+    #                         except:
+    #                             price = ''
+    #
+    #                         temp.append(recycler)
+    #                         temp.append(price)
+    #
+    #                     cond = condition
+    #                     if condition == "working":
+    #                         cond = "good"
+    #                     elif condition == "working-poor":
+    #                         cond = "poor"
+    #
+    #
+    #                     if temp:
+    #                         with open("compareandrecycle.csv","a",newline="",encoding="utf-8") as f:
+    #                             writer = csv.writer(f)
+    #                             writer.writerow(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,scrapped_time,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
+    #                             print(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,scrapped_time,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
+    #
+    #                 else:
+    #                     print("Exists...")
+    # driver.close()
 
     uploadtospreadsheet()
 
-    driver.close()
