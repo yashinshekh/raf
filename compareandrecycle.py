@@ -93,14 +93,13 @@ if __name__ == '__main__':
 
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1KaBHOgUEwVfrUmoMvzsIoH6aIhZdNhlDXquF3lq7NGs/edit#gid=0"
     sheet_name = "compareandrecycle"
+    filename = os.getcwd()+"/"+sheet_name+".csv"
 
     alreadyscrapped = []
     firefox_options = Options()
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
-    
-    filename = os.getcwd()+"/raf/"+sheet_name+".csv"
-    
+
     with open(filename,"a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['link','timestamp','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',

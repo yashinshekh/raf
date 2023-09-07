@@ -66,7 +66,7 @@ def uploadtospreadsheet():
 
     spreadsheet_id = spreadsheet_url.split('/')[-2]
 
-    with open(os.getcwd()+"/raf/"+sheet_name+".csv") as csv_file:
+    with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file)
         rows = list(csv_reader)
 
@@ -96,13 +96,14 @@ if __name__ == '__main__':
 
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1KaBHOgUEwVfrUmoMvzsIoH6aIhZdNhlDXquF3lq7NGs/edit#gid=0"
     sheet_name = "handyankauf"
+    filename = os.getcwd()+"/"+sheet_name+".csv"
 
     alreadyscrapped = []
     firefox_options = Options()
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
-    with open(os.getcwd()+"/raf/"+sheet_name+".csv","a",newline="",encoding="utf-8") as f:
+    with open(filename,"a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['link','timestamp','brand','title','phone_name','storage','Like new','Very good','Good','In order','Inadequate','EUR -> AUD','EUR -> HKD'])
 
@@ -188,7 +189,7 @@ if __name__ == '__main__':
                             except:
                                 cond_prices[condition] = ''
 
-                        with open(os.getcwd()+"/raf/"+sheet_name+".csv","a",newline="",encoding="utf-8") as f:
+                        with open(filename,"a",newline="",encoding="utf-8") as f:
                             writer = csv.writer(f)
                             writer.writerow(["https://handyankauf-online.at"+phone_link,scrapped_time,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
                             print(["https://handyankauf-online.at"+phone_link,scrapped_time,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
