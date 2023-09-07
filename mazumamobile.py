@@ -66,7 +66,7 @@ def uploadtospreadsheet():
 
     spreadsheet_id = spreadsheet_url.split('/')[-2]
 
-    with open(os.getcwd()+'/'+sheet_name+".csv") as csv_file:
+    with open(os.getcwd()+"/raf/"+sheet_name+".csv") as csv_file:
         csv_reader = csv.reader(csv_file)
         rows = list(csv_reader)
 
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     driver = webdriver.Firefox(options=firefox_options)
 
 
-    with open(os.getcwd()+'/'+sheet_name+".csv","a") as f:
+    with open(os.getcwd()+"/raf/"+sheet_name+".csv","a") as f:
         writer = csv.writer(f)
         writer.writerow(['brand','scrapped_time','title','storage','excellent','good','poor','faulty','dead','AUD -> HKD'])
 
@@ -176,7 +176,7 @@ if __name__ == '__main__':
                 faulty = response.xpath('.//*[@data-condition="Faulty"]/@data-condition-price').extract_first()
                 dead = response.xpath('.//*[@data-condition="Dead"]/@data-condition-price').extract_first()
 
-                with open(os.getcwd()+'/'+sheet_name+".csv","a") as f:
+                with open(os.getcwd()+"/raf/"+sheet_name+".csv","a") as f:
                     writer = csv.writer(f)
                     writer.writerow(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
                     print(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])

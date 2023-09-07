@@ -63,7 +63,7 @@ def uploadtospreadsheet():
 
     spreadsheet_id = spreadsheet_url.split('/')[-2]
 
-    with open(os.getcwd()+"/"+sheet_name+".csv") as csv_file:
+    with open(os.getcwd()+"/raf/"+sheet_name+".csv") as csv_file:
         csv_reader = csv.reader(csv_file)
         rows = list(csv_reader)
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
-    with open(os.getcwd()+"/compareandrecycle.csv","a",newline="",encoding="utf-8") as f:
+    with open(os.getcwd()+"/raf/"+sheet_name+".csv","a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['link','timestamp','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
                          'gbp_hkd_rate','gbp_aud_rate'])
@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
 
                         if temp:
-                            with open(os.getcwd()+"/compareandrecycle.csv","a",newline="",encoding="utf-8") as f:
+                            with open(os.getcwd()+"/raf/"+sheet_name+".csv","a",newline="",encoding="utf-8") as f:
                                 writer = csv.writer(f)
                                 writer.writerow(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,scrapped_time,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
                                 print(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,scrapped_time,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
