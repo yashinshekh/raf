@@ -153,6 +153,7 @@ if __name__ == '__main__':
             link_2 = sel2.xpath('.//a/@href').extract_first()
             title = sel2.xpath('.//a/text()').extract_first().replace('verkaufen','')
 
+
             driver.get("https://handyankauf-online.at/"+link_2)
 
             # phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")]').extract()
