@@ -96,91 +96,91 @@ if __name__ == '__main__':
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1KaBHOgUEwVfrUmoMvzsIoH6aIhZdNhlDXquF3lq7NGs/edit#gid=0"
     sheet_name = "mazumamobile"
 
-    # alreadyscrapped = []
-    # firefox_options = Options()
-    # firefox_options.headless = True
-    # driver = webdriver.Firefox(options=firefox_options)
-    #
-    #
-    # with open(os.getcwd()+'/'+sheet_name+".csv","a") as f:
-    #     writer = csv.writer(f)
-    #     writer.writerow(['brand','scrapped_time','title','storage','excellent','good','poor','faulty','dead','AUD -> HKD'])
-    #
-    # scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)")
-    #
-    # driver.get("https://wise.com/")
-    # driver.find_element(By.ID,'tw-calculator-source-select').click()
-    # driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('AUD')
-    # ActionChains(driver).send_keys(Keys.ENTER).perform()
-    # time.sleep(1)
-    # driver.get("https://wise.com/")
-    # driver.find_element(By.ID,'tw-calculator-target-select').click()
-    # driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('HKD')
-    # ActionChains(driver).send_keys(Keys.ENTER).perform()
-    # time.sleep(1)
-    # aud_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
-    #
-    # print(aud_hkd_rate)
-    #
-    # driver.find_element(By.ID,'tw-calculator-source-select').click()
-    # driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('EUR')
-    # ActionChains(driver).send_keys(Keys.ENTER).perform()
-    # time.sleep(1)
-    # driver.get("https://wise.com/")
-    # driver.find_element(By.ID,'tw-calculator-target-select').click()
-    # driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('AUD')
-    # ActionChains(driver).send_keys(Keys.ENTER).perform()
-    # time.sleep(1)
-    # eur_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
-    #
-    # print(eur_aud_rate)
-    #
-    # items = {
-    #     'iphone':'https://www.mazumamobile.com.au/sell-my-iphone/',
-    #     'galaxy s':'https://www.mazumamobile.com.au/sell-my-galaxy-s-series/',
-    #     'galaxy note':'https://www.mazumamobile.com.au/sell-my-galaxy-note/',
-    #     'google pixel':'https://www.mazumamobile.com.au/sell-my-google-pixel/',
-    #     'huawei':'https://www.mazumamobile.com.au/sell-my-huawei/',
-    #     'htc':'https://www.mazumamobile.com.au/sell-my-htc-one/',
-    #     'nokia':'https://www.mazumamobile.com.au/sell-my-nokia/',
-    #     'oneplus':'https://www.mazumamobile.com.au/sell-my-oneplus/',
-    #     'sony xperia':'https://www.mazumamobile.com.au/sell-my-sony-xperia/'
-    # }
-    #
-    # for k,v in items.items():
-    #     brand = k
-    #
-    #     driver.get(v)
-    #     datas = Selector(text=driver.page_source).xpath('.//*[@class="one-third "] | .//*[@class="one-third last"]').extract()
-    #     for data in datas:
-    #         sel = Selector(text=data)
-    #         title = sel.xpath('.//h3/text()').extract_first()
-    #
-    #         strgs = sel.xpath('.//*[@class="value "] | .//*[@class="value last"]').extract()
-    #         for strg in strgs:
-    #             sel1 = Selector(text=strg)
-    #
-    #             link = sel1.xpath('.//a/@href').extract_first()
-    #             storage = sel1.xpath('.//a/text()').extract_first()
-    #
-    #             if storage == "VIEW":
-    #                 storage = ''
-    #
-    #             driver.get("https://www.mazumamobile.com.au"+link)
-    #
-    #             response = Selector(text=driver.page_source)
-    #
-    #             excellent = response.xpath('.//*[@data-condition="Excellent"]/@data-condition-price').extract_first()
-    #             good = response.xpath('.//*[@data-condition="Good"]/@data-condition-price').extract_first()
-    #             poor = response.xpath('.//*[@data-condition="Poor"]/@data-condition-price').extract_first()
-    #             faulty = response.xpath('.//*[@data-condition="Faulty"]/@data-condition-price').extract_first()
-    #             dead = response.xpath('.//*[@data-condition="Dead"]/@data-condition-price').extract_first()
-    #
-    #             with open(os.getcwd()+'/'+sheet_name+".csv","a") as f:
-    #                 writer = csv.writer(f)
-    #                 writer.writerow(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
-    #                 print(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
-    #
-    # driver.close()
+    alreadyscrapped = []
+    firefox_options = Options()
+    firefox_options.headless = True
+    driver = webdriver.Firefox(options=firefox_options)
+
+
+    with open(os.getcwd()+'/'+sheet_name+".csv","a") as f:
+        writer = csv.writer(f)
+        writer.writerow(['brand','scrapped_time','title','storage','excellent','good','poor','faulty','dead','AUD -> HKD'])
+
+    scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)")
+
+    driver.get("https://wise.com/")
+    driver.find_element(By.ID,'tw-calculator-source-select').click()
+    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('AUD')
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    time.sleep(1)
+    driver.get("https://wise.com/")
+    driver.find_element(By.ID,'tw-calculator-target-select').click()
+    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('HKD')
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    time.sleep(1)
+    aud_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+
+    print(aud_hkd_rate)
+
+    driver.find_element(By.ID,'tw-calculator-source-select').click()
+    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('EUR')
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    time.sleep(1)
+    driver.get("https://wise.com/")
+    driver.find_element(By.ID,'tw-calculator-target-select').click()
+    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('AUD')
+    ActionChains(driver).send_keys(Keys.ENTER).perform()
+    time.sleep(1)
+    eur_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+
+    print(eur_aud_rate)
+
+    items = {
+        'iphone':'https://www.mazumamobile.com.au/sell-my-iphone/',
+        'galaxy s':'https://www.mazumamobile.com.au/sell-my-galaxy-s-series/',
+        'galaxy note':'https://www.mazumamobile.com.au/sell-my-galaxy-note/',
+        'google pixel':'https://www.mazumamobile.com.au/sell-my-google-pixel/',
+        'huawei':'https://www.mazumamobile.com.au/sell-my-huawei/',
+        'htc':'https://www.mazumamobile.com.au/sell-my-htc-one/',
+        'nokia':'https://www.mazumamobile.com.au/sell-my-nokia/',
+        'oneplus':'https://www.mazumamobile.com.au/sell-my-oneplus/',
+        'sony xperia':'https://www.mazumamobile.com.au/sell-my-sony-xperia/'
+    }
+
+    for k,v in items.items():
+        brand = k
+
+        driver.get(v)
+        datas = Selector(text=driver.page_source).xpath('.//*[@class="one-third "] | .//*[@class="one-third last"]').extract()
+        for data in datas:
+            sel = Selector(text=data)
+            title = sel.xpath('.//h3/text()').extract_first()
+
+            strgs = sel.xpath('.//*[@class="value "] | .//*[@class="value last"]').extract()
+            for strg in strgs:
+                sel1 = Selector(text=strg)
+
+                link = sel1.xpath('.//a/@href').extract_first()
+                storage = sel1.xpath('.//a/text()').extract_first()
+
+                if storage == "VIEW":
+                    storage = ''
+
+                driver.get("https://www.mazumamobile.com.au"+link)
+
+                response = Selector(text=driver.page_source)
+
+                excellent = response.xpath('.//*[@data-condition="Excellent"]/@data-condition-price').extract_first()
+                good = response.xpath('.//*[@data-condition="Good"]/@data-condition-price').extract_first()
+                poor = response.xpath('.//*[@data-condition="Poor"]/@data-condition-price').extract_first()
+                faulty = response.xpath('.//*[@data-condition="Faulty"]/@data-condition-price').extract_first()
+                dead = response.xpath('.//*[@data-condition="Dead"]/@data-condition-price').extract_first()
+
+                with open(os.getcwd()+'/'+sheet_name+".csv","a") as f:
+                    writer = csv.writer(f)
+                    writer.writerow(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
+                    print(["https://www.mazumamobile.com.au"+link,scrapped_time,brand,title,storage,excellent,good,poor,faulty,dead,aud_hkd_rate])
+
+    driver.close()
 
     uploadtospreadsheet()
