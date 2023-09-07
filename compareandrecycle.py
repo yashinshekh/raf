@@ -143,6 +143,7 @@ if __name__ == '__main__':
     for brand in brands:
         driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
         driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
+        time.sleep(5)
 
         ds = Selector(text=driver.page_source).xpath('.//*[@class="product-wrap"]').extract()
         for d in ds:
