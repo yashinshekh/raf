@@ -125,6 +125,9 @@ if __name__ == '__main__':
     print("GBP -> HKD Rate: ")
     print(gbp_hkd_rate)
 
+    with open("rate1.html","w") as f:
+        f.write(driver.page_source)
+
     driver.find_element(By.ID,'tw-calculator-source-select').click()
     driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
     ActionChains(driver).send_keys(Keys.ENTER).perform()

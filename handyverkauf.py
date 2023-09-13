@@ -214,6 +214,5 @@ if __name__ == '__main__':
                 # break
             # break
 
-    # driver.close()
-
-    # uploadtospreadsheet()
+    driver.close()
+    uploadtospreadsheet()
