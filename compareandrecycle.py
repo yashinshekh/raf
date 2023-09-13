@@ -1,6 +1,7 @@
 import os
 import platform
 
+from selenium.common import TimeoutException
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 
@@ -104,47 +105,44 @@ if __name__ == '__main__':
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
+    driver.set_page_load_timeout(10)
+
     with open(filename,"a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['timestamp','link','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
                          'gbp_hkd_rate','gbp_aud_rate'])
 
-    driver.get("https://wise.com/wishes/")
-    time.sleep(2)
-    # driver.find_element(By.ID,'tw-calculator-source-select').click()
-    driver.execute_script("""document.getElementById('tw-calculator-source-select').click();""")
-    driver.execute_script("""document.getElementById('tw-calculator-source-select-searchbox').value='';""")
-    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(2)
-    driver.get("https://wise.com/")
-    # driver.find_element(By.ID,'tw-calculator-target-select').click()
-    driver.execute_script("""document.getElementById('tw-calculator-target-select').click();""")
-    driver.execute_script("""document.getElementById('tw-calculator-target-select-searchbox').value='';""")
-    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('HKD')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(2)
-    gbp_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+
+    gbp_hkd_rate = requests.post(
+        "https://wise.com/gateway/v3/quotes/",
+        json={
+            "sourceAmount": 100,
+            "sourceCurrency": "GBP",
+            "targetCurrency": "HKD",
+            "preferredPayIn": None,
+            "guaranteedTargetAmount": False,
+            "type": "REGULAR",
+        },
+    ).json()['rate']
 
     print("GBP -> HKD Rate: ")
     print(gbp_hkd_rate)
 
-
-    # driver.find_element(By.ID,'tw-calculator-source-select').click()
-    driver.execute_script("""document.getElementById('tw-calculator-source-select').click();""")
-    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('GBP')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(2)
-    driver.get("https://wise.com/")
-    # driver.find_element(By.ID,'tw-calculator-target-select').click()
-    driver.execute_script("""document.getElementById('tw-calculator-target-select').click();""")
-    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('AUD')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(2)
-    gbp_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+    gbp_aud_rate = requests.post(
+        "https://wise.com/gateway/v3/quotes/",
+        json={
+            "sourceAmount": 100,
+            "sourceCurrency": "GBP",
+            "targetCurrency": "AUD",
+            "preferredPayIn": None,
+            "guaranteedTargetAmount": False,
+            "type": "REGULAR",
+        },
+    ).json()['rate']
 
     print("GBP -> AUD Rate: ")
     print(gbp_aud_rate)
+
 
 
     driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
@@ -168,13 +166,11 @@ if __name__ == '__main__':
                 for capacity in ['64gb','128gb','256gb','512gb']:
                     if "https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
 
-                        if 'Sorry we couldn\'t find a price' in str(driver.page_source):
-                            with open("done.csv","a") as f:
-                                writer = csv.writer(f)
-                                writer.writerow(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity])
-                                print(["https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity])
+                        try:
+                            driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
+                        except TimeoutException:
+                            pass
 
-                        driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
                         time.sleep(3)
                         response = Selector(text=driver.page_source)
                         datas = response.xpath('.//*[@id="comparison-table"]/div[@class="comparison-row "]').extract()[:3]
