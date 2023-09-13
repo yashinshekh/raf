@@ -186,6 +186,8 @@ if __name__ == '__main__':
                             temp.append(recycler)
                             temp.append(price)
 
+                        temp += [None]*(6-len(temp))
+
                         cond = condition
                         if condition == "working":
                             cond = "good"
