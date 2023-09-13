@@ -125,6 +125,7 @@ if __name__ == '__main__':
     time.sleep(1)
     aud_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
 
+    print("AUD -> HKD Rate: ")
     print(aud_hkd_rate)
 
     driver.find_element(By.ID,'tw-calculator-source-select').click()
@@ -138,6 +139,7 @@ if __name__ == '__main__':
     time.sleep(1)
     eur_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
 
+    print("EUR -> AUD Rate: ")
     print(eur_aud_rate)
 
     items = {
