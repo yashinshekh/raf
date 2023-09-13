@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     with open(filename,"a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(['link','timestamp','brand','title','phone_name','storage','Like new','Very good','Good','In order','Inadequate','EUR -> AUD','EUR -> HKD'])
+        writer.writerow(['timestamp','link','brand','title','phone_name','storage','Like new','Very good','Good','In order','Inadequate','EUR -> AUD','EUR -> HKD'])
 
     scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)")
 
@@ -195,8 +195,8 @@ if __name__ == '__main__':
 
                         with open(filename,"a",newline="",encoding="utf-8") as f:
                             writer = csv.writer(f)
-                            writer.writerow(["https://handyankauf-online.at"+phone_link,scrapped_time,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
-                            print(["https://handyankauf-online.at"+phone_link,scrapped_time,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
+                            writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://handyankauf-online.at"+phone_link,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
+                            print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://handyankauf-online.at"+phone_link,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
 
                     except:
                         pass

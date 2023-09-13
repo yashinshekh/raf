@@ -206,8 +206,8 @@ if __name__ == '__main__':
 
                     with open(filename,"a") as f:
                         writer = csv.writer(f)
-                        writer.writerow([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
-                        print([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
+                        writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
+                        print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
                         # print([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp)
 
                     # break
