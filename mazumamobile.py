@@ -95,7 +95,11 @@ def uploadtospreadsheet():
 if __name__ == '__main__':
     spreadsheet_url = "https://docs.google.com/spreadsheets/d/1KaBHOgUEwVfrUmoMvzsIoH6aIhZdNhlDXquF3lq7NGs/edit#gid=0"
     sheet_name = "mazumamobile"
-    filename = os.getcwd()+"/"+sheet_name+".csv"
+
+    if '/yashin' in os.getcwd():
+        filename = os.getcwd()+"/"+sheet_name+".csv"
+    else:
+        filename = '/home/admin/'+sheet_name+".csv"
 
     alreadyscrapped = []
     firefox_options = Options()
