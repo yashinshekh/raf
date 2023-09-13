@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
     with open(filename,"a") as f:
         writer = csv.writer(f)
-        writer.writerow(['scrapped time','brand','link','title','variation','storage','condition','functionality','vendor','price','vendor','price','vendor','price','EUR -> HKD','EUR -> AUD'])
+        writer.writerow(['scrapped time','brand','link','title','variation','storage','color','condition','functionality','vendor','price','vendor','price','vendor','price','EUR -> HKD','EUR -> AUD'])
 
     scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)")
 
@@ -156,8 +156,14 @@ if __name__ == '__main__':
                 variation = ''.join(response.xpath('.//*[@class="handy_variation"]/text()').extract()).strip()
             except:
                 variation = ''
-
-            storage = variation.split()[0]
+            try:
+                storage = variation.split()[0]
+            except:
+                storage = ''
+            try:
+                color = variation.split()[-1]
+            except:
+                color = ''
 
             mk_id = response.xpath('.//*[@id="inputSuccess1"]/@data-mk').extract_first()
 
@@ -200,8 +206,8 @@ if __name__ == '__main__':
 
                     with open(filename,"a") as f:
                         writer = csv.writer(f)
-                        writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
-                        print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
+                        writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,color,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
+                        print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,color,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
                         # print([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp)
 
                     # break
