@@ -105,10 +105,6 @@ if __name__ == '__main__':
     else:
         filename = '/home/admin/'+sheet_name+".csv"
 
-    alreadyscrapped = []
-    firefox_options = Options()
-    firefox_options.headless = True
-    driver = webdriver.Firefox(options=firefox_options)
 
     with open(filename,"a") as f:
         writer = csv.writer(f)
@@ -116,36 +112,34 @@ if __name__ == '__main__':
 
     scrapped_time = datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)")
 
-    driver.get("https://wise.com/")
-    driver.find_element(By.ID,'tw-calculator-source-select').click()
-    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('EUR')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    driver.get("https://wise.com/")
-    driver.find_element(By.ID,'tw-calculator-target-select').click()
-    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('HKD')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    eur_hkd_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+    eur_hkd_rate = requests.post(
+        "https://wise.com/gateway/v3/quotes/",
+        json={
+            "sourceAmount": 100,
+            "sourceCurrency": "EUR",
+            "targetCurrency": "HKD",
+            "preferredPayIn": None,
+            "guaranteedTargetAmount": False,
+            "type": "REGULAR",
+        },
+    ).json()['rate']
 
-    print(eur_hkd_rate)
 
-    driver.find_element(By.ID,'tw-calculator-source-select').click()
-    driver.find_element(By.ID,'tw-calculator-source-select-searchbox').send_keys('EUR')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    driver.get("https://wise.com/")
-    driver.find_element(By.ID,'tw-calculator-target-select').click()
-    driver.find_element(By.ID,'tw-calculator-target-select-searchbox').send_keys('AUD')
-    ActionChains(driver).send_keys(Keys.ENTER).perform()
-    time.sleep(1)
-    eur_aud_rate = Selector(text=driver.page_source).xpath('.//*[@class="tw-calculator-breakdown-rate__value"]/text()').extract_first()
+    eur_aud_rate = requests.post(
+        "https://wise.com/gateway/v3/quotes/",
+        json={
+            "sourceAmount": 100,
+            "sourceCurrency": "EUR",
+            "targetCurrency": "AUD",
+            "preferredPayIn": None,
+            "guaranteedTargetAmount": False,
+            "type": "REGULAR",
+        },
+    ).json()['rate']
 
-    print(eur_aud_rate)
 
-    driver.close()
-
-    brands = ["iphone"]
+    brands = ["iphone","samsung","huawei","sony","oneplus","oppo","google","xiaomi","motorola","nokia","lg","realme","blackberry",
+              "razer","nothing"]
 
     for brand in brands:
         # driver.get(f"https://www.handyverkauf.net/?preisvergleich={brand}")
@@ -214,5 +208,4 @@ if __name__ == '__main__':
                 # break
             # break
 
-    driver.close()
     uploadtospreadsheet()
