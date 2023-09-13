@@ -69,7 +69,7 @@ def uploadtospreadsheet():
 
     spreadsheet_id = spreadsheet_url.split('/')[-2]
 
-    with open(os.getcwd()+"/raf/"+sheet_name+".csv") as csv_file:
+    with open(filename) as csv_file:
         csv_reader = csv.reader(csv_file)
         rows = list(csv_reader)
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
-    with open("handyverkauf.csv","a") as f:
+    with open(filename,"a") as f:
         writer = csv.writer(f)
         writer.writerow(['scrapped time','brand','link','title','variation','storage','condition','functionality','vendor','price','vendor','price','vendor','price','EUR -> HKD','EUR -> AUD'])
 
@@ -204,7 +204,7 @@ if __name__ == '__main__':
                         functionality = "malfunction"
 
 
-                    with open("handyverkauf.csv","a") as f:
+                    with open(filename,"a") as f:
                         writer = csv.writer(f)
                         writer.writerow([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
                         print([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
