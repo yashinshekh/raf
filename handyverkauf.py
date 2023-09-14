@@ -170,46 +170,49 @@ if __name__ == '__main__':
             for optischer in [10,1,2,3,4]:
                 for funct in [1,0]:
 
-                    req = client.get(f"https://www.handyverkauf.net/addons/pausgabe_neu.php?id={id}&w={funct}&z={optischer}&s=0&mode=handy&mk={mk_id}")
+                    try:
+                        req = client.get(f"https://www.handyverkauf.net/addons/pausgabe_neu.php?id={id}&w={funct}&z={optischer}&s=0&mode=handy&mk={mk_id}")
 
-                    sel = Selector(text=req.json()['vergleich'].replace('\\',''))
+                        sel = Selector(text=req.json()['vergleich'].replace('\\',''))
 
-                    datas = sel.xpath('.//*[@style="border-bottom:1px solid #EAEAEA; border-left:1px solid #EAEAEA; border-right:1px solid #EAEAEA;"]').extract()[:3]
+                        datas = sel.xpath('.//*[@style="border-bottom:1px solid #EAEAEA; border-left:1px solid #EAEAEA; border-right:1px solid #EAEAEA;"]').extract()[:3]
 
-                    temp = []
-                    for data in datas:
-                        sel1 = Selector(text=data)
-                        vendor = sel1.xpath('.//a/img/@alt').extract_first()
-                        price = sel1.xpath('.//span/a/text()[contains(.,"€")]').extract_first()
-                        temp.append(vendor)
-                        temp.append(price)
+                        temp = []
+                        for data in datas:
+                            sel1 = Selector(text=data)
+                            vendor = sel1.xpath('.//a/img/@alt').extract_first()
+                            price = sel1.xpath('.//span/a/text()[contains(.,"€")]').extract_first()
+                            temp.append(vendor)
+                            temp.append(price)
 
-                    temp += [None]*(6-len(temp))
+                        temp += [None]*(6-len(temp))
 
-                    if optischer == 10:
-                        condition = "Brand New"
-                    elif optischer == 1:
-                        condition = "Like New"
-                    elif optischer == 2:
-                        condition = "Very Good"
-                    elif optischer == 3:
-                        condition = "Good"
-                    else:
-                        condition = "Acceptable"
-
-
-                    if funct == 1:
-                        functionality = "Fully Functional"
-                    else:
-                        functionality = "malfunction"
+                        if optischer == 10:
+                            condition = "Brand New"
+                        elif optischer == 1:
+                            condition = "Like New"
+                        elif optischer == 2:
+                            condition = "Very Good"
+                        elif optischer == 3:
+                            condition = "Good"
+                        else:
+                            condition = "Acceptable"
 
 
-                    with open(filename,"a") as f:
-                        writer = csv.writer(f)
-                        writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,color,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
-                        print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,color,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
-                        # print([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp)
+                        if funct == 1:
+                            functionality = "Fully Functional"
+                        else:
+                            functionality = "malfunction"
 
+
+                        with open(filename,"a") as f:
+                            writer = csv.writer(f)
+                            writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,color,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
+                            print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),brand,link,title,variation,storage,color,condition,functionality]+temp+[eur_hkd_rate,eur_aud_rate])
+                            # print([scrapped_time,brand,link,title,variation,storage,condition,functionality]+temp)
+
+                    except:
+                        pass
                     # break
                 # break
             # break
