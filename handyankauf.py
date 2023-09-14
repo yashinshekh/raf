@@ -1,6 +1,7 @@
 import os
 import platform
 
+from selenium.common import TimeoutException
 from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
@@ -104,8 +105,10 @@ if __name__ == '__main__':
 
     alreadyscrapped = []
     firefox_options = Options()
-    firefox_options.headless = True
+    # firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
+
+    driver.set_page_load_timeout(10)
 
 
     with open(filename,"a",newline="",encoding="utf-8") as f:
@@ -137,8 +140,10 @@ if __name__ == '__main__':
         },
     ).json()['rate']
 
-
-    driver.get("https://handyankauf-online.at/")
+    try:
+        driver.get("https://handyankauf-online.at/")
+    except TimeoutException:
+        pass
 
     ds = Selector(text=a).xpath('.//a').extract()
     for d in ds:
@@ -147,7 +152,10 @@ if __name__ == '__main__':
         link = sel1.xpath('.//a/@href').extract_first()
 
         print("Link: "+str(link))
-        driver.get("https://handyankauf-online.at/"+link)
+        try:
+            driver.get("https://handyankauf-online.at/"+link)
+        except TimeoutException:
+            pass
 
         datas1 = Selector(text=driver.page_source).xpath('.//*[@class="fs10lh1-5 cf1"]').extract()
         for data1 in datas1:
