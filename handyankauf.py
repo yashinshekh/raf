@@ -163,8 +163,10 @@ if __name__ == '__main__':
             link_2 = sel2.xpath('.//a/@href').extract_first()
             title = sel2.xpath('.//a/text()').extract_first().replace('verkaufen','')
 
-
-            driver.get("https://handyankauf-online.at/"+link_2)
+            try:
+                driver.get("https://handyankauf-online.at/"+link_2)
+            except TimeoutException:
+                pass
 
             # phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")]').extract()
             phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")] | .//*[@class="fs10lh1-5 cf1"]/a/@href').extract()
