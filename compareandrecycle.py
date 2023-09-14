@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
     with open(filename,"a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(['timestamp','link','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
+        writer.writerow(['timestamp','link','Brand','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
                          'gbp_hkd_rate','gbp_aud_rate'])
 
 
@@ -205,8 +205,8 @@ if __name__ == '__main__':
                             if temp:
                                 with open(filename,"a",newline="",encoding="utf-8") as f:
                                     writer = csv.writer(f)
-                                    writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
-                                    print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
+                                    writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,brand,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
+                                    print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,brand,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
 
                         else:
                             print("Exists...")
