@@ -178,6 +178,7 @@ if __name__ == '__main__':
                 for condition in ['new','working','working-poor','broken']:
                     for capacity in capacities:
                         if "https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
+                            alreadyscrapped.append("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
 
                             try:
                                 driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
