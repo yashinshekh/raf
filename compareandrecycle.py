@@ -167,8 +167,11 @@ if __name__ == '__main__':
                 sel1 = Selector(text=d)
                 l = sel1.xpath('.//a/@href').extract_first()
                 product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
+                try:
+                    driver.get("https://www.compareandrecycle.co.uk"+l)
+                except TimeoutException:
+                    pass
 
-                driver.get("https://www.compareandrecycle.co.uk"+l)
                 capacities = Selector(text=driver.page_source).xpath('.//h3[contains(.,"Capacity")]/following-sibling::span/text()').extract()
                 print(capacities)
 
