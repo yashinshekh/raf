@@ -152,8 +152,11 @@ if __name__ == '__main__':
     print(brands)
 
     for brand in brands:
-        driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
-        time.sleep(5)
+        try:
+            driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
+            time.sleep(5)
+        except TimeoutException:
+            pass
 
         try:
             driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
