@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     alreadyscrapped = []
     firefox_options = Options()
-    firefox_options.headless = True
+    # firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
     driver.set_page_load_timeout(10)
@@ -153,7 +153,7 @@ if __name__ == '__main__':
 
     for brand in brands:
         driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
-        time.sleep(3)
+        time.sleep(5)
 
         try:
             driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
@@ -165,8 +165,12 @@ if __name__ == '__main__':
                 l = sel1.xpath('.//a/@href').extract_first()
                 product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
 
+                driver.get("https://www.compareandrecycle.co.uk"+l)
+                capacities = Selector(text=driver.page_source).xpath('.//h3[contains(.,"Capacity")]/following-sibling::span/text()').extract()
+                print(capacities)
+
                 for condition in ['new','working','working-poor','broken']:
-                    for capacity in ['64gb','128gb','256gb','512gb']:
+                    for capacity in capacities:
                         if "https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
 
                             try:
@@ -208,6 +212,7 @@ if __name__ == '__main__':
                             print("Exists...")
 
         except:
+            print("Error in clicking the brand")
             pass
 
     driver.close()
