@@ -104,6 +104,14 @@ if __name__ == '__main__':
         filename = '/home/admin/'+sheet_name+".csv"
 
     alreadyscrapped = []
+
+    with open(filename,"r") as r:
+        reader = csv.reader(r)
+        for line in reader:
+            alreadyscrapped.append(line[0].split()[0]+line[1])
+
+    print(alreadyscrapped[:10])
+
     firefox_options = Options()
     firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
@@ -176,7 +184,8 @@ if __name__ == '__main__':
             for phone_link in phone_links:
                 phone_link = phone_link.replace("return x5engine.utils.imPopUpWin('",'').replace("','imPopUp', 1000, 562);",'')
                 phone_link = '/'+phone_link if '/script' not in phone_link else phone_link
-                if "https://handyankauf-online.at"+phone_link not in alreadyscrapped:
+                if datetime.datetime.now().strftime("%Y-%m-%d")+"https://handyankauf-online.at"+phone_link not in alreadyscrapped:
+                    alreadyscrapped.append(datetime.datetime.now().strftime("%Y-%m-%d")+"https://handyankauf-online.at"+phone_link)
                     try:
                         driver.get("https://handyankauf-online.at"+phone_link)
 
@@ -207,6 +216,9 @@ if __name__ == '__main__':
 
                     except:
                         pass
+
+                else:
+                    print("Exists....")
 
     driver.close()
 
