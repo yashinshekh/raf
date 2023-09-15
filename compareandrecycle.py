@@ -101,8 +101,16 @@ if __name__ == '__main__':
         filename = '/home/admin/'+sheet_name+".csv"
 
     alreadyscrapped = []
+
+    with open(filename,"r") as r:
+        reader = csv.reader(r)
+        for line in reader:
+            alreadyscrapped.append(line[0].split()[0]+line[1])
+
+    print(alreadyscrapped[:10])
+
     firefox_options = Options()
-    firefox_options.headless = True
+    # firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
     driver.set_page_load_timeout(10)
@@ -144,85 +152,95 @@ if __name__ == '__main__':
     print(gbp_aud_rate)
 
 
+    try:
 
-    driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
-    time.sleep(3)
-
-    brands = Selector(text=a).xpath('.//*[@class="brand-box "]/img/@alt').extract()
-    print(brands)
-
-    for brand in brands:
         try:
             driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
-            time.sleep(5)
+            time.sleep(3)
         except TimeoutException:
             pass
 
-        try:
-            driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
-            time.sleep(3)
+        brands = Selector(text=a).xpath('.//*[@class="brand-box "]/img/@alt').extract()
+        print(brands)
 
-            ds = Selector(text=driver.page_source).xpath('.//*[@class="product-wrap"]').extract()
-            for d in ds:
-                sel1 = Selector(text=d)
-                l = sel1.xpath('.//a/@href').extract_first()
-                product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
-                try:
-                    driver.get("https://www.compareandrecycle.co.uk"+l)
-                except TimeoutException:
-                    pass
+        for brand in brands:
+            try:
+                driver.get("https://www.compareandrecycle.co.uk/search?page=1&productType=1")
+                time.sleep(5)
+            except TimeoutException:
+                pass
 
-                capacities = Selector(text=driver.page_source).xpath('.//h3[contains(.,"Capacity")]/following-sibling::span/text()').extract()
-                print(capacities)
+            try:
+                driver.find_element(By.XPATH,f'.//img[@alt="{brand}"]').click()
+                time.sleep(3)
 
-                for condition in ['new','working','working-poor','broken']:
-                    for capacity in capacities:
-                        if "https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
-                            alreadyscrapped.append("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
+                ds = Selector(text=driver.page_source).xpath('.//*[@class="product-wrap"]').extract()
+                for d in ds:
+                    sel1 = Selector(text=d)
+                    l = sel1.xpath('.//a/@href').extract_first()
+                    product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
+                    try:
+                        driver.get("https://www.compareandrecycle.co.uk"+l)
+                    except TimeoutException:
+                        pass
 
-                            try:
-                                driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
-                            except TimeoutException:
-                                pass
+                    capacities = Selector(text=driver.page_source).xpath('.//h3[contains(.,"Capacity")]/following-sibling::span/text()').extract()
+                    print(capacities)
 
-                            time.sleep(3)
-                            response = Selector(text=driver.page_source)
-                            datas = response.xpath('.//*[@id="comparison-table"]/div[@class="comparison-row "]').extract()[:3]
-                            temp = []
-                            for data in datas:
-                                sel = Selector(text=data)
-                                recycler = sel.xpath('.//*[@class="comparison-cell merchant"]/img/@alt').extract_first()
+                    for condition in ['new','working','working-poor','broken']:
+                        for capacity in capacities:
+                            if datetime.datetime.now().strftime("%Y-%m-%d")+"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity not in alreadyscrapped:
+                                alreadyscrapped.append(datetime.datetime.now().strftime("%Y-%m-%d")+"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
+
                                 try:
-                                    price = ''.join(re.findall(r'\d|\.', ''.join(sel.xpath('.//*[@class="comparison-cell price sort"]//text()').extract())))
-                                except:
-                                    price = ''
+                                    driver.get("https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity)
+                                except TimeoutException:
+                                    pass
 
-                                temp.append(recycler)
-                                temp.append(price)
+                                time.sleep(3)
+                                response = Selector(text=driver.page_source)
+                                datas = response.xpath('.//*[@id="comparison-table"]/div[@class="comparison-row "]').extract()[:3]
+                                temp = []
+                                for data in datas:
+                                    sel = Selector(text=data)
+                                    recycler = sel.xpath('.//*[@class="comparison-cell merchant"]/img/@alt').extract_first()
+                                    try:
+                                        price = ''.join(re.findall(r'\d|\.', ''.join(sel.xpath('.//*[@class="comparison-cell price sort"]//text()').extract())))
+                                    except:
+                                        price = ''
 
-                            temp += [None]*(6-len(temp))
+                                    temp.append(recycler)
+                                    temp.append(price)
 
-                            cond = condition
-                            if condition == "working":
-                                cond = "good"
-                            elif condition == "working-poor":
-                                cond = "poor"
+                                temp += [None]*(6-len(temp))
+
+                                cond = condition
+                                if condition == "working":
+                                    cond = "good"
+                                elif condition == "working-poor":
+                                    cond = "poor"
 
 
-                            if temp:
-                                with open(filename,"a",newline="",encoding="utf-8") as f:
-                                    writer = csv.writer(f)
-                                    writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,brand,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
-                                    print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,brand,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
+                                if temp:
+                                    with open(filename,"a",newline="",encoding="utf-8") as f:
+                                        writer = csv.writer(f)
+                                        writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,brand,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
+                                        print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://www.compareandrecycle.co.uk"+l+"?condition="+str(condition)+"&capacity="+capacity,brand,product_name,capacity,cond]+temp+[gbp_hkd_rate,gbp_aud_rate])
 
-                        else:
-                            print("Exists...")
+                            else:
+                                print("Exists...")
 
-        except:
-            print("Error in clicking the brand")
-            pass
+            except:
+                print("Error in clicking the brand")
+                pass
 
-    driver.close()
+        driver.close()
 
-    uploadtospreadsheet()
+        uploadtospreadsheet()
+
+    except:
+        if '/yashin' in os.getcwd():
+            os.system("python3 compareandrecycle.py")
+        else:
+            os.system("/usr/bin/python3 /home/admin/raf/compareandrecycle.py")
 
