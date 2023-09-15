@@ -149,77 +149,85 @@ if __name__ == '__main__':
     ).json()['rate']
 
     try:
-        driver.get("https://handyankauf-online.at/")
-    except TimeoutException:
-        pass
-
-    ds = Selector(text=a).xpath('.//a').extract()
-    for d in ds:
-        sel1 = Selector(text=d)
-        brand = sel1.xpath('.//a/text()').extract_first()
-        link = sel1.xpath('.//a/@href').extract_first()
-
-        print("Link: "+str(link))
         try:
-            driver.get("https://handyankauf-online.at/"+link)
+            driver.get("https://handyankauf-online.at/")
         except TimeoutException:
             pass
 
-        datas1 = Selector(text=driver.page_source).xpath('.//*[@class="fs10lh1-5 cf1"]').extract()
-        for data1 in datas1:
-            sel2 = Selector(text=data1)
-            link_2 = sel2.xpath('.//a/@href').extract_first()
-            title = sel2.xpath('.//a/text()').extract_first().replace('verkaufen','')
+        ds = Selector(text=a).xpath('.//a').extract()
+        for d in ds:
+            sel1 = Selector(text=d)
+            brand = sel1.xpath('.//a/text()').extract_first()
+            link = sel1.xpath('.//a/@href').extract_first()
 
+            print("Link: "+str(link))
             try:
-                driver.get("https://handyankauf-online.at/"+link_2)
+                driver.get("https://handyankauf-online.at/"+link)
             except TimeoutException:
                 pass
 
-            # phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")]').extract()
-            phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")] | .//*[@class="fs10lh1-5 cf1"]/a/@href').extract()
+            datas1 = Selector(text=driver.page_source).xpath('.//*[@class="fs10lh1-5 cf1"]').extract()
+            for data1 in datas1:
+                sel2 = Selector(text=data1)
+                link_2 = sel2.xpath('.//a/@href').extract_first()
+                title = sel2.xpath('.//a/text()').extract_first().replace('verkaufen','')
 
-            print(phone_links)
+                try:
+                    driver.get("https://handyankauf-online.at/"+link_2)
+                except TimeoutException:
+                    pass
 
-            for phone_link in phone_links:
-                phone_link = phone_link.replace("return x5engine.utils.imPopUpWin('",'').replace("','imPopUp', 1000, 562);",'')
-                phone_link = '/'+phone_link if '/script' not in phone_link else phone_link
-                if datetime.datetime.now().strftime("%Y-%m-%d")+"https://handyankauf-online.at"+phone_link not in alreadyscrapped:
-                    alreadyscrapped.append(datetime.datetime.now().strftime("%Y-%m-%d")+"https://handyankauf-online.at"+phone_link)
-                    try:
-                        driver.get("https://handyankauf-online.at"+phone_link)
+                # phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")]').extract()
+                phone_links = Selector(text=driver.page_source).xpath('.//button/@onclick[contains(.,"return x5engine.utils.imPopUpWin")] | .//*[@class="fs10lh1-5 cf1"]/a/@href').extract()
 
-                        response = Selector(text=driver.page_source)
+                print(phone_links)
 
-                        storage = response.xpath('.//h1/text()').extract_first().split()[-1]
-                        phone_name = response.xpath('.//h1/text()').extract_first()
+                for phone_link in phone_links:
+                    phone_link = phone_link.replace("return x5engine.utils.imPopUpWin('",'').replace("','imPopUp', 1000, 562);",'')
+                    phone_link = '/'+phone_link if '/script' not in phone_link else phone_link
+                    if datetime.datetime.now().strftime("%Y-%m-%d")+"https://handyankauf-online.at"+phone_link not in alreadyscrapped:
+                        alreadyscrapped.append(datetime.datetime.now().strftime("%Y-%m-%d")+"https://handyankauf-online.at"+phone_link)
                         try:
-                            phone_name = phone_name.replace(storage,'')
+                            driver.get("https://handyankauf-online.at"+phone_link)
+
+                            response = Selector(text=driver.page_source)
+
+                            storage = response.xpath('.//h1/text()').extract_first().split()[-1]
+                            phone_name = response.xpath('.//h1/text()').extract_first()
+                            try:
+                                phone_name = phone_name.replace(storage,'')
+                            except:
+                                pass
+
+                            cond_prices = {"Wie neu":'',"Sehr Gut":'','Gut':'','In Ordnung':'','Mangelhaft':''}
+
+                            for condition in ['Wie neu','Sehr Gut','Gut','In Ordnung','Mangelhaft']:
+                                try:
+                                    Select(driver.find_element(By.XPATH,'.//*[@name="zustand"]')).select_by_visible_text(condition)
+                                    time.sleep(3)
+
+                                    cond_prices[condition] = ''.join(Selector(text=driver.page_source).xpath('.//*[@id="price"]/..//text()').extract())
+                                except:
+                                    cond_prices[condition] = ''
+
+                            with open(filename,"a",newline="",encoding="utf-8") as f:
+                                writer = csv.writer(f)
+                                writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://handyankauf-online.at"+phone_link,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
+                                print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://handyankauf-online.at"+phone_link,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
+
                         except:
                             pass
 
-                        cond_prices = {"Wie neu":'',"Sehr Gut":'','Gut':'','In Ordnung':'','Mangelhaft':''}
+                    else:
+                        print("Exists....")
 
-                        for condition in ['Wie neu','Sehr Gut','Gut','In Ordnung','Mangelhaft']:
-                            try:
-                                Select(driver.find_element(By.XPATH,'.//*[@name="zustand"]')).select_by_visible_text(condition)
-                                time.sleep(3)
+        driver.close()
 
-                                cond_prices[condition] = ''.join(Selector(text=driver.page_source).xpath('.//*[@id="price"]/..//text()').extract())
-                            except:
-                                cond_prices[condition] = ''
+        uploadtospreadsheet()
 
-                        with open(filename,"a",newline="",encoding="utf-8") as f:
-                            writer = csv.writer(f)
-                            writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://handyankauf-online.at"+phone_link,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
-                            print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://handyankauf-online.at"+phone_link,brand,title,phone_name,storage]+list(cond_prices.values())+[eur_aud_rate,eur_hkd_rate])
+    except:
+        if '/yashin' in os.getcwd():
+            os.system("python3 handyankauf.py")
+        else:
+            os.system("/usr/bin/python3 /home/admin/raf/handyankauf.py")
 
-                    except:
-                        pass
-
-                else:
-                    print("Exists....")
-
-    driver.close()
-
-    uploadtospreadsheet()
