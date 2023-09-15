@@ -101,17 +101,10 @@ if __name__ == '__main__':
         filename = '/home/admin/'+sheet_name+".csv"
 
     alreadyscrapped = []
-
-    with open(filename,"r") as r:
-        reader = csv.reader(r)
-        for line in reader:
-            alreadyscrapped.append(line[0].split()[0]+line[1])
-
-    print(alreadyscrapped[:10])
-
     firefox_options = Options()
-    firefox_options.headless = True
+    # firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
+    driver.fullscreen_window()
 
     driver.set_page_load_timeout(10)
 
@@ -119,6 +112,14 @@ if __name__ == '__main__':
         writer = csv.writer(f)
         writer.writerow(['timestamp','link','Brand','Make Model','Capacity','Condition','recycler 1','price 1','recycler 2','price 2','recycler 3','price 3',
                          'gbp_hkd_rate','gbp_aud_rate'])
+
+
+    with open(filename,"r") as r:
+        reader = csv.reader(r)
+        for line in reader:
+            alreadyscrapped.append(line[0].split()[0]+line[1])
+
+    print(alreadyscrapped[:10])
 
 
     gbp_hkd_rate = requests.post(

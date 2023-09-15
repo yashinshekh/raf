@@ -105,12 +105,6 @@ if __name__ == '__main__':
 
     alreadyscrapped = []
 
-    with open(filename,"r") as r:
-        reader = csv.reader(r)
-        for line in reader:
-            alreadyscrapped.append(line[0].split()[0]+line[1])
-
-    print(alreadyscrapped[:10])
 
     firefox_options = Options()
     firefox_options.headless = True
@@ -122,6 +116,13 @@ if __name__ == '__main__':
     with open(filename,"a",newline="",encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(['timestamp','link','brand','title','phone_name','storage','Like new','Very good','Good','In order','Inadequate','EUR -> AUD','EUR -> HKD'])
+
+    with open(filename,"r") as r:
+        reader = csv.reader(r)
+        for line in reader:
+            alreadyscrapped.append(line[0].split()[0]+line[1])
+
+    print(alreadyscrapped[:10])
 
 
     eur_hkd_rate = requests.post(
