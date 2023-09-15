@@ -182,6 +182,7 @@ if __name__ == '__main__':
                     product_name = ''.join(sel1.xpath('.//*[@class="product-name"]/text()').extract())
                     try:
                         driver.get("https://www.compareandrecycle.co.uk"+l)
+                        time.sleep(4)
                     except TimeoutException:
                         pass
 
