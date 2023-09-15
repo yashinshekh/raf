@@ -110,7 +110,7 @@ if __name__ == '__main__':
     print(alreadyscrapped[:10])
 
     firefox_options = Options()
-    # firefox_options.headless = True
+    firefox_options.headless = True
     driver = webdriver.Firefox(options=firefox_options)
 
     driver.set_page_load_timeout(10)
