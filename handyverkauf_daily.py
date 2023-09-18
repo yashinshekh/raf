@@ -147,6 +147,7 @@ if __name__ == '__main__':
     #     # response = Selector(text=)
     #     links = ['https:'+str(i) for i in Selector(text=client.get(f"https://www.handyverkauf.net/?preisvergleich={brand}").text).xpath('.//a[contains(.,"Verkaufen")]/@href[contains(.,"-")]').extract()]
 
+    brand = "apple"
     links = []
     with open("handerverkauf_input.csv","r") as r:
         reader = csv.reader(r)
