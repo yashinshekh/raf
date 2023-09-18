@@ -136,56 +136,59 @@ if __name__ == '__main__':
             sold = sel.xpath('.//*[@class="mr-2 text-xs"][contains(.,"Sold")]/text()').extract_first().replace('Sold','').replace('+','')
         except:
             sold = ''
-        jsondata = json.loads(sel.xpath('.//*[@id="__NEXT_DATA__"]/text()').extract_first())
 
-        for data in jsondata['props']['pageProps']['offers']:
-            title = sel.xpath('.//h1[@id="e2e-product-name"]/text()').extract_first()
-            brand = data['brand']
-            vendor = data['vendor']
-            try:
-                ram = data['ram']
-            except:
-                ram = ''
+        try:
+            jsondata = json.loads(sel.xpath('.//*[@id="__NEXT_DATA__"]/text()').extract_first())
 
-            sku = data['sku']
-            try:
-                color = data['color']
-            except:
-                color = ''
-            try:
-                condition = data['tags'][-1].replace('Condition_','')
-            except:
-                condition = ''
-            try:
-                storage = data['storage']
-            except:
-                storage = ''
-            try:
-                connectivity = data['connectivity']
-            except:
-                connectivity = ''
-            try:
-                simslot = data['simSlot']
-            except:
-                simslot = ''
-            try:
-                price = data['price']
-            except:
-                price = ''
+            for data in jsondata['props']['pageProps']['offers']:
+                title = sel.xpath('.//h1[@id="e2e-product-name"]/text()').extract_first()
+                brand = data['brand']
+                vendor = data['vendor']
+                try:
+                    ram = data['ram']
+                except:
+                    ram = ''
 
-            if ["https://reebelo.co.nz"+link,title,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price] not in alreadyscrapped:
-                alreadyscrapped.append(["https://reebelo.co.nz"+link,title,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price])
-                with open(filename,"a") as f:
-                    writer = csv.writer(f)
-                    writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://reebelo.co.nz"+link,title,sold,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price,
-                                     nz_hkd_rate,nz_aud_rate,nz_usd_rate,nz_eur_rate,aud_hkd_rate,aud_usd_rate,aud_eur_rate])
-                    print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://reebelo.co.nz"+link,title,sold,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price,
-                           nz_hkd_rate,nz_aud_rate,nz_usd_rate,nz_eur_rate,aud_hkd_rate,aud_usd_rate,aud_eur_rate])
+                sku = data['sku']
+                try:
+                    color = data['color']
+                except:
+                    color = ''
+                try:
+                    condition = data['tags'][-1].replace('Condition_','')
+                except:
+                    condition = ''
+                try:
+                    storage = data['storage']
+                except:
+                    storage = ''
+                try:
+                    connectivity = data['connectivity']
+                except:
+                    connectivity = ''
+                try:
+                    simslot = data['simSlot']
+                except:
+                    simslot = ''
+                try:
+                    price = data['price']
+                except:
+                    price = ''
 
-            else:
-                print("Exists...")
+                if ["https://reebelo.co.nz"+link,title,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price] not in alreadyscrapped:
+                    alreadyscrapped.append(["https://reebelo.co.nz"+link,title,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price])
+                    with open(filename,"a") as f:
+                        writer = csv.writer(f)
+                        writer.writerow([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://reebelo.co.nz"+link,title,sold,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price,
+                                         nz_hkd_rate,nz_aud_rate,nz_usd_rate,nz_eur_rate,aud_hkd_rate,aud_usd_rate,aud_eur_rate])
+                        print([datetime.datetime.now().strftime("%Y-%m-%d (%H:%M)"),"https://reebelo.co.nz"+link,title,sold,brand,vendor,ram,sku,color,condition,storage,connectivity,simslot,price,
+                               nz_hkd_rate,nz_aud_rate,nz_usd_rate,nz_eur_rate,aud_hkd_rate,aud_usd_rate,aud_eur_rate])
 
+                else:
+                    print("Exists...")
 
+        except:
+            pass
 
     driver.close()
 
